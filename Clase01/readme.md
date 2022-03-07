@@ -81,3 +81,9 @@ docker image rm <nombre de la imagen | identificador> <nombre de la imagen | ide
 ```
 docker image rm -f <nombre de la imagen>
 ```
+
+### Eliminar imágenes huérfanas
+
+```
+docker images -f dangling=true | xargs docker rmi
+```

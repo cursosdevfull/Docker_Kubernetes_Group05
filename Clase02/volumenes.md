@@ -71,3 +71,9 @@ docker volume ls -f dangling=true
 ```
 docker volume rm <nombre del volumen>
 ```
+
+### Eliminar volúmenes huérfanos
+
+```
+docker volume ls -f dangling=true -q | xargs docker volume rm
+```

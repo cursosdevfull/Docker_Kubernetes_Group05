@@ -66,3 +66,9 @@ docker push 2344458484848.ecr.aws.com/image_custom
 docker logs servernginx
 docker logs --tail 10 -f servernginx
 ```
+
+### Para crear contenedores "temporales"
+
+```
+docker run -d --rm --name servernginx03 -p 9200:80 -e name=sergio -e lastname=hidalgo nginx
+```
