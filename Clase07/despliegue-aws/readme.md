@@ -55,3 +55,65 @@ eksctl create iamserviceaccount --cluster=cluster-docker --namespace=kube-system
 ```
 kubectl get deploy -n kube-system alb-ingress-controller
 ```
+
+### Instalar el target group binding
+
+```
+kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller/crds?ref=master"
+```
+
+### Agregar los repositorios
+
+```
+helm repo add eks https://aws.github.io/eks-charts
+```
+
+### Actualizar los repositorios
+
+```
+helm repo update
+```
+
+### Instalar el ingress controller del balanceador
+
+```
+helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=cluster-docker --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller -n kube-system
+```
+
+### Verificar que ahora exista el ingress controller del balanceador
+
+```
+kubectl get deploy -n kube-system aws-load-balancer-controller
+```
+
+### Crear las imágenes con los tags
+
+- Ir a ECR y crear los repositorios para cada de las imágenes
+- Usar las url de los repositorios como tagnames de cada una de las imágenes
+  > _Revisar docker-compose-aws.yaml_
+
+```
+docker compose -f docker-compose-aws.yaml build
+```
+
+### Vincular la cuenta de AWS con la cuenta local de Docker
+
+```
+docker login -u AWS -p $(aws ecr get-login-password --region us-east-2) 282865065290.dkr.ecr.us-east-2.amazonaws.com
+```
+
+### Subir las imágenes al ECR
+
+```
+docker compose -f docker-compose-aws.yaml push
+```
+
+---
+
+### Conectar a cluster usando aws cli
+
+```
+aws sts get-caller-identity
+aws eks --region us-east-2 update-kubeconfig --name cluster-docker
+
+```

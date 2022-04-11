@@ -18,6 +18,10 @@ app.get("/health", (req, res) => {
   res.send("OK");
 });
 
+app.get("/", (req, res) => {
+  res.send("OK");
+});
+
 app.use("*", (req, res) => {
   res.status(404).send("Not found");
 });
